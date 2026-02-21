@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: wiki
+      POSTGRES_USER: wiki
+      POSTGRES_PASSWORD: 1234
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - wiki-net
+
+  wiki:
+    build: .
+    container_name: wiki-app
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+    networks:
+      - wiki-net
+
+volumes:
+  pgdata:
+
+networks:
+  wiki-net:
+
